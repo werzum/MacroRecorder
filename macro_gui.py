@@ -14,10 +14,39 @@ class MacroRecorderApp(Gtk.Window):
 
         # Load settings
         macro_recorder.load_settings()
-test
+
         # Vertical Box Layout
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.add(vbox)
+
+        # Macro Slots (1, 2, 3) - Buttons in a horizontal box
+        self.slot_label = Gtk.Label(label="Macro Slots")
+        vbox.pack_start(self.slot_label, True, True, 0)
+
+        hbox_slots = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        vbox.pack_start(hbox_slots, True, True, 0)
+
+        self.current_slot = 1  # Default slot is 1
+
+        # Create the radio buttons for macro slots
+        self.slot_button_1 = Gtk.RadioButton.new_with_label_from_widget(None, "Slot 1")
+        self.slot_button_1.connect("toggled", self.on_slot_button_toggled, 1)
+        hbox_slots.pack_start(self.slot_button_1, True, True, 0)
+
+        self.slot_button_2 = Gtk.RadioButton.new_with_label_from_widget(
+            self.slot_button_1, "Slot 2"
+        )
+        self.slot_button_2.connect("toggled", self.on_slot_button_toggled, 2)
+        hbox_slots.pack_start(self.slot_button_2, True, True, 0)
+
+        self.slot_button_3 = Gtk.RadioButton.new_with_label_from_widget(
+            self.slot_button_1, "Slot 3"
+        )
+        self.slot_button_3.connect("toggled", self.on_slot_button_toggled, 3)
+        hbox_slots.pack_start(self.slot_button_3, True, True, 0)
+
+        # Set Slot 1 as active by default
+        self.slot_button_1.set_active(True)
 
         # Record Button
         self.record_button = Gtk.Button(label="Start Recording")
@@ -100,6 +129,7 @@ test
             self.record_button.set_label("Start Recording")
             self.status_label.set_text("Status: Idle")
         else:
+            macro_recorder.current_slot = self.current_slot  # Update the current slot
             macro_recorder.toggle_recording()  # Start recording
             self.record_button.set_label("Stop Recording")
             self.status_label.set_text("Status: Recording")
@@ -116,15 +146,26 @@ test
             macro_recorder.settings["alt_tab_delay"] = alt_tab_delay
 
             # Save settings before playing
-            macro_recorder.save_log()
+            macro_recorder.save_log(self.current_slot)
 
             self.status_label.set_text("Status: Playing")
             thread = threading.Thread(
                 target=macro_recorder.play_recorded_script,
-                args=(repetitions, regular_delay, alt_tab_delay),
+                args=(repetitions, regular_delay, alt_tab_delay, self.current_slot),
             )
             thread.start()
             GLib.timeout_add(100, self.check_if_playing)
+
+    def on_slot_button_toggled(self, button, slot):
+        if button.get_active():
+            self.current_slot = slot
+            print(f"Selected Slot {slot}")
+
+    def check_if_playing(self):
+        if not macro_recorder.PLAYING:
+            self.status_label.set_text("Status: Idle")
+            return False
+        return True
 
     def on_repetitions_changed(self, widget):
         value = int(widget.get_value())
@@ -138,15 +179,12 @@ test
         value = widget.get_value()
         self.alt_tab_delay_label.set_text(f"Alt+Tab Delay: {value:.2f}s")
 
-    def check_if_playing(self):
-        if not macro_recorder.PLAYING:
-            self.status_label.set_text("Status: Idle")
-            return False
-        return True
-
 
 if __name__ == "__main__":
     app = MacroRecorderApp()
     app.connect("destroy", Gtk.main_quit)
     app.show_all()
     Gtk.main()
+
+
+test

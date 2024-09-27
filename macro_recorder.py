@@ -73,16 +73,23 @@ def toggle_recording():
         recording_listener.start()  # Start the listener when recording starts
 
 
-def save_log():
-    """Save the settings and key log to the log file"""
+def save_log(current_slot=1):
+    """Save the settings and key log to the log file, divided into slots"""
+    slot_separator = f"--- Macro Slot {current_slot} ---"
+    all_macros = load_all_macros()
+
+    # Update the macro in the current slot
+    all_macros[current_slot - 1] = "\n".join(log)
+
     with open(LOG_FILE, "w") as f:
         # Save settings at the top of the file
         f.write(
             f"settings: repetitions={settings['repetitions']}, regular_delay={settings['regular_delay']}, alt_tab_delay={settings['alt_tab_delay']}\n"
         )
-        # Save key strokes to the file
-        for line in log:
-            f.write(line + "\n")
+        # Write the macros into the file
+        for i, macro in enumerate(all_macros):
+            f.write(f"--- Macro Slot {i+1} ---\n")
+            f.write(macro + "\n")
 
 
 def load_settings():
@@ -105,34 +112,84 @@ def load_settings():
         print("No recorded script found.")
 
 
-def play_recorded_script(repetitions=1, regular_delay=0.01, alt_tab_delay=0.3):
-    """Play the recorded key strokes from the log file"""
+def load_all_macros():
+    """Load all macros from the log file, ensuring there are exactly 3 slots."""
+    try:
+        with open(LOG_FILE, "r") as f:
+            data = f.read()
+        # Split the data based on macro slot delimiters and clean up
+        slots = [s.strip() for s in data.split("--- Macro Slot") if s]
+        slots[1:] = [s[6:] for s in slots[1:]]  # Remove the slot number from the rest
+
+        # Ensure that there are exactly 3 slots (fill with empty strings if needed)
+        if len(slots) < 3:
+            slots += [""] * (3 - len(slots))  # Add empty slots if fewer than 3
+
+        return slots[1:3]  # Ensure we only return 3 slots, no settings
+    except FileNotFoundError:
+        # If no file exists, create one with 3 empty slots
+        save_all_macros(["", "", ""])
+        return [""] * 3
+
+
+def save_all_macros(macros):
+    """Save all macros to the log file, ensuring they are stored in 3 slots."""
+    with open(LOG_FILE, "w") as f:
+        for i, macro in enumerate(macros, start=1):
+            f.write(f"--- Macro Slot {i} ---\n")
+            f.write(macro + "\n")
+
+
+def play_recorded_script(repetitions=1, regular_delay=0.01, alt_tab_delay=0.3, slot=1):
+    """Play the recorded key strokes from the specified macro slot"""
     global PLAYING
     PLAYING = True
     try:
         load_settings()  # Load settings before playing
-        with open(LOG_FILE, "r") as f:
-            # Skip the first line (settings)
-            lines = f.readlines()[1:]
+        all_macros = load_all_macros()  # Load all macros from file
+        # Ensure the slot exists
+        if slot < 1 or slot > len(all_macros):
+            print(f"Error: Slot {slot} is out of range.")
+            return
+
+        # Get the macro for the selected slot
+        macro = all_macros[slot - 1].strip()
+
+        if not macro:
+            print(f"No macro recorded in slot {slot}.")
+            return
+
+        lines = macro.split("\n")
 
         for _ in range(repetitions):
             for line in lines:
-                key_action = line.strip().split()
-                if len(key_action) < 2:
-                    continue
-                key_name = key_action[0]
-                action = key_action[1]
+                line = line.strip()
 
-                duration = 0
-                if key_name == "Key.tab" or key_name == "Key.alt":
-                    duration = alt_tab_delay
-                else:
-                    duration = regular_delay
+                # Skip non-keypress lines, like settings
+                if not line or line.startswith("settings:") or "--- Macro Slot" in line:
+                    continue
+
+                key_action = line.split(" ")
+
+                if len(key_action) < 2:
+                    # If the line doesn't contain both key and action, skip it
+                    continue
+
+                key_name, action = key_action[0], key_action[1]
+
+                duration = (
+                    alt_tab_delay
+                    if key_name in ("Key.tab", "Key.alt")
+                    else regular_delay
+                )
+
                 resolved_key = resolve_key(key_name)
+
                 if action == "press":
                     key_controller.press(resolved_key)
                 elif action == "release":
                     key_controller.release(resolved_key)
+
                 time.sleep(duration)
 
     except FileNotFoundError:
