@@ -4,6 +4,8 @@
 
 The Macro Recorder is a Python-based application that allows users to record and replay keyboard actions. It features a simple graphical user interface (GUI) to manage and store multiple macro slots. Macros can be saved, loaded, and executed, making it a useful tool for automating repetitive keyboard tasks.
 
+![GUI Sample](sample_image.png)
+
 ## Features
 
 - **Record Keyboard Actions**: Capture key presses and releases in real time.
