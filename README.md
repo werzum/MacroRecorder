@@ -24,7 +24,7 @@ The Macro Recorder is a Python-based application that allows users to record and
    Clone the repository:
 
    ```console
-   git clone https://github.com/yourusername/macro_recorder.git
+   git clone https://github.com/werzum/MacroRecorder.git
    cd macro_recorder
    ```
 
