@@ -5,15 +5,11 @@ from gi.repository import Gtk, Gdk, GLib
 import threading
 import macro_recorder  # Import the backend functions
 
-
 class MacroRecorderApp(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Macro Recorder")
         self.set_border_width(10)
         self.set_default_size(300, 200)
-
-        # Load settings
-        macro_recorder.load_settings()
 
         # Vertical Box Layout
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
@@ -26,7 +22,7 @@ class MacroRecorderApp(Gtk.Window):
         hbox_slots = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         vbox.pack_start(hbox_slots, True, True, 0)
 
-        self.current_slot = 1  # Default slot is 1
+        self.current_slot = 0  # Default slot is 0
 
         # Create the radio buttons for macro slots
         self.slot_button_1 = Gtk.RadioButton.new_with_label_from_widget(None, "Slot 1")
@@ -86,8 +82,8 @@ class MacroRecorderApp(Gtk.Window):
         adjustment_regular_delay = Gtk.Adjustment(
             value=macro_recorder.settings["regular_delay"],
             lower=0.001,
-            upper=0.01,
-            step_increment=0.001,
+            upper=0.1,
+            step_increment=0.01,
         )
         self.regular_delay_slider = Gtk.Scale(
             orientation=Gtk.Orientation.HORIZONTAL, adjustment=adjustment_regular_delay
@@ -145,20 +141,20 @@ class MacroRecorderApp(Gtk.Window):
             macro_recorder.settings["regular_delay"] = regular_delay
             macro_recorder.settings["alt_tab_delay"] = alt_tab_delay
 
-            # Save settings before playing
-            macro_recorder.save_log(self.current_slot)
+            # # Save settings before playing
+            # macro_recorder.save_log(self.current_slot)
 
             self.status_label.set_text("Status: Playing")
             thread = threading.Thread(
                 target=macro_recorder.play_recorded_script,
-                args=(repetitions, regular_delay, alt_tab_delay, self.current_slot),
+                args=[self.current_slot],
             )
             thread.start()
             GLib.timeout_add(100, self.check_if_playing)
 
     def on_slot_button_toggled(self, button, slot):
         if button.get_active():
-            self.current_slot = slot
+            self.current_slot = slot - 1
             print(f"Selected Slot {slot}")
 
     def check_if_playing(self):
@@ -185,6 +181,3 @@ if __name__ == "__main__":
     app.connect("destroy", Gtk.main_quit)
     app.show_all()
     Gtk.main()
-
-
-test
