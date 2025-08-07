@@ -91,8 +91,17 @@ def log_key(key, action="press"):
 
 recording_listener = None
 
-def load_data(slot_index=None):
-    """Load data from disk and optionally update settings from a specific slot."""
+def update_slot_settings(slot_index):
+    data = load_data()
+    if slot_index is not None:
+        slot = data[slot_index]
+        if "settings" in slot:
+            for k, v in slot["settings"].items():
+                if k in settings:
+                    settings[k] = v
+
+def load_data():
+    """Load all data from disk"""
     if os.path.exists(LOG_FILE):
         with open(LOG_FILE, "r") as f:
             data = json.load(f)
@@ -101,13 +110,6 @@ def load_data(slot_index=None):
 
     while len(data) < 3:
         data.append({})
-
-    if slot_index is not None:
-        slot = data[slot_index]
-        if "settings" in slot:
-            for k, v in slot["settings"].items():
-                if k in settings:
-                    settings[k] = v
 
     return data
 
@@ -126,11 +128,11 @@ def play_recorded_script(slot_index=0):
     global PLAYING
     PLAYING = True
     try:
-        data = load_data(slot_index)  # Also loads settings
+        data = load_data()  # Also loads settings
         slot = data[slot_index]
 
         if "events" not in slot or not slot["events"]:
-            print(f"No events recorded in slot {slot_index}.")
+            print(f"No events recorded in slot {slot_index+1}.")
             return
 
         for _ in range(settings["repetitions"]):
@@ -155,17 +157,20 @@ def play_recorded_script(slot_index=0):
 
 def toggle_recording(slot_index=0):
     global RECORDING, recording_listener
+    # stop if already recording
     if RECORDING:
         RECORDING = False
         save_slot(slot_index)
         if recording_listener:
             recording_listener.stop()
             recording_listener = None
+    # else start
     else:
         RECORDING = True
         log.clear()
         recording_listener = keyboard.Listener(on_press=on_press, on_release=on_release)
         recording_listener.start()
+    return RECORDING
 
 def on_press(key):
     if RECORDING:

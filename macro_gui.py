@@ -119,16 +119,36 @@ class MacroRecorderApp(Gtk.Window):
         self.status_label = Gtk.Label(label="Status: Idle")
         vbox.pack_start(self.status_label, True, True, 0)
 
+        # Recorded Events Expander
+        self.expander = Gtk.Expander(label="Recorded Events")
+        self.expander.set_expanded(False)  # Start collapsed
+
+        # Scrolled, non-editable TextView
+        self.events_textview = Gtk.TextView()
+        self.events_textview.set_editable(False)
+        self.events_textview.set_cursor_visible(False)
+        self.events_textview.set_wrap_mode(Gtk.WrapMode.WORD)
+
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_min_content_height(100)
+        scrolled_window.add(self.events_textview)
+
+        self.expander.add(scrolled_window)
+        vbox.pack_start(self.expander, True, True, 0)
+
+        # Initial load of slot events
+        self.update_events_view()
+
     def on_record_button_clicked(self, widget):
-        if macro_recorder.RECORDING:
-            macro_recorder.toggle_recording()  # Stop recording
-            self.record_button.set_label("Start Recording")
-            self.status_label.set_text("Status: Idle")
+        current_recording_status = macro_recorder.toggle_recording(self.current_slot)
+        if current_recording_status:
+            app.record_button.set_label("Stop Recording")
+            app.status_label.set_text("Status: Recording")
         else:
-            macro_recorder.current_slot = self.current_slot  # Update the current slot
-            macro_recorder.toggle_recording()  # Start recording
-            self.record_button.set_label("Stop Recording")
-            self.status_label.set_text("Status: Recording")
+            self.record_button.set_label("Start Recording")
+            self.status_label.set_text("Status: Stopped")
+            self.update_events_view()
 
     def on_play_button_clicked(self, widget):
         if not macro_recorder.RECORDING and not macro_recorder.PLAYING:
@@ -140,9 +160,6 @@ class MacroRecorderApp(Gtk.Window):
             macro_recorder.settings["repetitions"] = repetitions
             macro_recorder.settings["regular_delay"] = regular_delay
             macro_recorder.settings["alt_tab_delay"] = alt_tab_delay
-
-            # # Save settings before playing
-            # macro_recorder.save_log(self.current_slot)
 
             self.status_label.set_text("Status: Playing")
             thread = threading.Thread(
@@ -156,6 +173,7 @@ class MacroRecorderApp(Gtk.Window):
         if button.get_active():
             self.current_slot = slot - 1
             print(f"Selected Slot {slot}")
+            self.update_events_view()
 
     def check_if_playing(self):
         if not macro_recorder.PLAYING:
@@ -174,6 +192,28 @@ class MacroRecorderApp(Gtk.Window):
     def on_alt_tab_delay_changed(self, widget):
         value = widget.get_value()
         self.alt_tab_delay_label.set_text(f"Alt+Tab Delay: {value:.2f}s")
+    
+    def update_events_view(self):
+        """Update the text view with recorded events from the selected slot."""
+        data = macro_recorder.load_data()
+        slot = data[self.current_slot]
+
+        buffer = self.events_textview.get_buffer()
+        if "events" in slot:
+            lines = []
+            for event in slot["events"]:
+                key = event.get("key", "")
+                action = event.get("action", "")
+                duration = event.get("duration", None)
+                if duration is not None:
+                    lines.append(f"{key} {action} ({duration:.3f}s)")
+                else:
+                    lines.append(f"{key} {action}")
+            text = "\n".join(lines)
+        else:
+            text = "(No events recorded)"
+
+        buffer.set_text(text)
 
 
 if __name__ == "__main__":

@@ -1,99 +1,26 @@
 [
   {
-    "events": [
-      {
-        "key": "Key.alt",
-        "action": "press"
-      },
-      {
-        "key": "Key.tab",
-        "action": "press"
-      },
-      {
-        "key": "Key.tab",
-        "action": "release",
-        "duration": 0.096
-      },
-      {
-        "key": "Key.alt",
-        "action": "release"
-      },
-      {
-        "key": "'s'",
-        "action": "press"
-      },
-      {
-        "key": "'d'",
-        "action": "press"
-      },
-      {
-        "key": "'s'",
-        "action": "release",
-        "duration": 0.064
-      },
-      {
-        "key": "'f'",
-        "action": "press"
-      },
-      {
-        "key": "'d'",
-        "action": "release",
-        "duration": 0.03
-      },
-      {
-        "key": "'f'",
-        "action": "release"
-      },
-      {
-        "key": "'s'",
-        "action": "press"
-      },
-      {
-        "key": "'d'",
-        "action": "press"
-      },
-      {
-        "key": "'s'",
-        "action": "release",
-        "duration": 0.096
-      },
-      {
-        "key": "'f'",
-        "action": "press"
-      },
-      {
-        "key": "'d'",
-        "action": "release",
-        "duration": 0.024
-      },
-      {
-        "key": "'f'",
-        "action": "release"
-      },
-      {
-        "key": "Key.alt",
-        "action": "press"
-      },
-      {
-        "key": "Key.tab",
-        "action": "press"
-      },
-      {
-        "key": "Key.alt",
-        "action": "release",
-        "duration": 0.088
-      },
-      {
-        "key": "Key.tab",
-        "action": "release"
-      }
-    ],
+    "events": [],
     "settings": {
       "repetitions": 1,
       "regular_delay": 0.01,
       "alt_tab_delay": 0.3
     }
   },
-  {},
-  {}
+  {
+    "events": [],
+    "settings": {
+      "repetitions": 1,
+      "regular_delay": 0.01,
+      "alt_tab_delay": 0.3
+    }
+  },
+  {
+    "events": [],
+    "settings": {
+      "repetitions": 1,
+      "regular_delay": 0.01,
+      "alt_tab_delay": 0.3
+    }
+  }
 ]
