@@ -3,7 +3,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GLib
 import threading
-import macro_recorder  # Import the backend functions
+import macrorecorder.macro_recorder as macro_recorder # Import the backend functions
 
 class MacroRecorderApp(Gtk.Window):
     def __init__(self):
@@ -143,8 +143,8 @@ class MacroRecorderApp(Gtk.Window):
     def on_record_button_clicked(self, widget):
         current_recording_status = macro_recorder.toggle_recording(self.current_slot)
         if current_recording_status:
-            app.record_button.set_label("Stop Recording")
-            app.status_label.set_text("Status: Recording")
+            self.record_button.set_label("Stop Recording")
+            self.status_label.set_text("Status: Recording")
         else:
             self.record_button.set_label("Start Recording")
             self.status_label.set_text("Status: Stopped")
@@ -216,8 +216,11 @@ class MacroRecorderApp(Gtk.Window):
         buffer.set_text(text)
 
 
-if __name__ == "__main__":
+def main():
     app = MacroRecorderApp()
     app.connect("destroy", Gtk.main_quit)
     app.show_all()
     Gtk.main()
+
+if __name__ == "__main__":
+    main()

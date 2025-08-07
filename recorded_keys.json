@@ -2,38 +2,37 @@
   {
     "events": [
       {
-        "key": "'t'",
+        "key": "Key.alt",
         "action": "press"
       },
       {
-        "key": "'e'",
+        "key": "Key.tab",
         "action": "press"
       },
       {
-        "key": "'t'",
+        "key": "Key.alt",
         "action": "release",
-        "duration": 0.04
+        "duration": 0.08
       },
       {
-        "key": "'s'",
+        "key": "Key.tab",
+        "action": "release"
+      },
+      {
+        "key": "Key.alt",
         "action": "press"
       },
       {
-        "key": "'e'",
-        "action": "release",
-        "duration": 0.046
-      },
-      {
-        "key": "'t'",
+        "key": "Key.tab",
         "action": "press"
       },
       {
-        "key": "'s'",
+        "key": "Key.alt",
         "action": "release",
-        "duration": 0.051
+        "duration": 0.056
       },
       {
-        "key": "'t'",
+        "key": "Key.tab",
         "action": "release"
       }
     ],
@@ -44,9 +43,79 @@
     }
   },
   {
-    "events": [],
+    "events": [
+      {
+        "key": "Key.alt",
+        "action": "press"
+      },
+      {
+        "key": "Key.tab",
+        "action": "press"
+      },
+      {
+        "key": "Key.tab",
+        "action": "release",
+        "duration": 0.104
+      },
+      {
+        "key": "Key.alt",
+        "action": "release"
+      },
+      {
+        "key": "'t'",
+        "action": "press"
+      },
+      {
+        "key": "'e'",
+        "action": "press"
+      },
+      {
+        "key": "'t'",
+        "action": "release",
+        "duration": 0.08
+      },
+      {
+        "key": "'s'",
+        "action": "press"
+      },
+      {
+        "key": "'e'",
+        "action": "release",
+        "duration": 0.048
+      },
+      {
+        "key": "'t'",
+        "action": "press"
+      },
+      {
+        "key": "'s'",
+        "action": "release",
+        "duration": 0.04
+      },
+      {
+        "key": "'t'",
+        "action": "release"
+      },
+      {
+        "key": "Key.alt",
+        "action": "press"
+      },
+      {
+        "key": "Key.tab",
+        "action": "press"
+      },
+      {
+        "key": "Key.tab",
+        "action": "release",
+        "duration": 0.08
+      },
+      {
+        "key": "Key.alt",
+        "action": "release"
+      }
+    ],
     "settings": {
-      "repetitions": 1,
+      "repetitions": 2,
       "regular_delay": 0.01,
       "alt_tab_delay": 0.3
     }

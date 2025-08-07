@@ -10,8 +10,8 @@ sdist = { url = "https://files.pythonhosted.org/packages/63/fe/a17c106a1f4061ce8
 
 [[package]]
 name = "macrorecorder"
-version = "0.1.0"
-source = { virtual = "." }
+version = "1.0.0"
+source = { editable = "." }
 dependencies = [
     { name = "pycairo" },
     { name = "pygobject" },
