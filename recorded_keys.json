@@ -1,6 +1,42 @@
 [
   {
-    "events": [],
+    "events": [
+      {
+        "key": "'t'",
+        "action": "press"
+      },
+      {
+        "key": "'e'",
+        "action": "press"
+      },
+      {
+        "key": "'t'",
+        "action": "release",
+        "duration": 0.04
+      },
+      {
+        "key": "'s'",
+        "action": "press"
+      },
+      {
+        "key": "'e'",
+        "action": "release",
+        "duration": 0.046
+      },
+      {
+        "key": "'t'",
+        "action": "press"
+      },
+      {
+        "key": "'s'",
+        "action": "release",
+        "duration": 0.051
+      },
+      {
+        "key": "'t'",
+        "action": "release"
+      }
+    ],
     "settings": {
       "repetitions": 1,
       "regular_delay": 0.01,
