@@ -22,7 +22,12 @@ The Macro Recorder is a Python-based application that allows users to record and
 
 ## Installation
 
-   Clone the repository:
+   Just install it with pip with:
+   ```console
+   pip install linux_macrorecorder
+   ```
+
+   or clone the repository:
 
    ```console
    git clone https://github.com/werzum/MacroRecorder.git

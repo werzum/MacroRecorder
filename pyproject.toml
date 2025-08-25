@@ -1,6 +1,6 @@
 [project]
-name = "macrorecorder"
-version = "1.0.0"
+name = "linux_macrorecorder"
+version = "1.0.2"
 description = "Simple macro recorder for keystrokes on X and Wayland"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -9,6 +9,9 @@ dependencies = [
     "pygobject>=3.52.3",
     "pynput>=1.8.1",
 ]
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+keywords = ["macro", "recorder", "keystrokes", "automation"]
 
 [project.scripts]
 macrorecorder = "macrorecorder.macro_gui:main"
@@ -22,3 +25,6 @@ packages = ["macrorecorder"]
 
 [tool.hatch.build]
 sources = ["."]
+
+[project.urls]
+Homepage = "https://github.com/werzum/MacroRecorder"
