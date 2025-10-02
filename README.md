@@ -19,6 +19,7 @@ The Macro Recorder is a Python-based application that allows users to record and
 - `pynput` library for keyboard event handling
 - Tkinter (included with Python standard library for GUI)
 - `libgirepository-2.0-dev` - install it with `sudo apt install libgirepository-2.0-dev`
+- `libcairo2-dev` - install it with `sudo apt install libcairo2-dev` 
 
 ## Installation
 
