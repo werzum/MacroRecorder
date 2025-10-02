@@ -14,7 +14,7 @@ license-files = ["LICENSE"]
 keywords = ["macro", "recorder", "keystrokes", "automation"]
 
 [project.scripts]
-macrorecorder = "macrorecorder.macro_gui:main"
+macrorecorder = "macrorecorder.gui.application:main"
 
 [build-system]
 requires = ["hatchling"]
