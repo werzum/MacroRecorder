@@ -1,10 +1,14 @@
 """Configuration constants for the Macro Recorder backend."""
 
 from pathlib import Path
+
+from platformdirs import user_data_dir
 from pynput.keyboard import Key
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-LOG_FILE = PROJECT_ROOT / "recorded_keys.json"
+APP_NAME = "MacroRecorder"
+APP_AUTHOR = "MacroRecorder"
+LOG_FILE = Path(user_data_dir(APP_NAME, APP_AUTHOR)) / "recorded_keys.json"
+LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 DEFAULT_SETTINGS = {
     "repetitions": 1,

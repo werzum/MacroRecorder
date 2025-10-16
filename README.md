@@ -1,6 +1,6 @@
 # Macro Recorder
 
-A simple GTK application for recording and replaying keyboard input. The app offers three macro slots, customizable playback timing, and persistent storage so you can automate repetitive tasks from the desktop.
+A simple PySide6/Qt application for recording and replaying keyboard input. The app offers three macro slots, customizable playback timing, and persistent storage so you can automate repetitive tasks from the desktop.
 
 ![GUI Sample](sample_image.png)
 
@@ -14,32 +14,9 @@ A simple GTK application for recording and replaying keyboard input. The app off
 ## Requirements
 
 - Python 3.10+
-- GTK 3 runtime with GObject introspection
-- Cairo graphics libraries (used by GTK bindings)
+- PySide6 (Qt 6) runtime — installing the project with `pip` pulls the prebuilt Qt wheels for Linux, macOS, and Windows
 
-### System packages
-
-On Debian/Ubuntu (and derivatives):
-
-```console
-sudo apt update
-sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-3.0 \
-                 libcairo2-dev libgirepository-1.0-1
-```
-
-On Fedora:
-
-```console
-sudo dnf install python3-gobject gtk3 cairo-gobject-devel
-```
-
-On macOS (Homebrew):
-
-```console
-brew install pygobject3 gtk+3
-```
-
-> **Note:** The project uses `pynput` for keyboard hooks. On Linux, that dependency will additionally pull in `evdev` and `python-xlib`; on macOS it uses `pyobjc` frameworks; no extra action is needed beyond the Python install.
+> **Note:** The project uses `pynput` for keyboard hooks. On Linux, that dependency will additionally pull in `evdev` and `python-xlib`; on macOS it uses `pyobjc` frameworks, and on Windows it installs `pywin32`. macOS users must grant the terminal or Python executable “Accessibility” permissions so key capture can work, and Windows users should allow the app through any desktop security prompts the first time they run it.
 
 ## Installation
 
@@ -73,7 +50,7 @@ If you installed the package globally, you can also use the console script:
 macrorecorder
 ```
 
-Macros and their per-slot settings are stored in `recorded_keys.json` in the project directory (or your current working directory when using the installed package).
+Macros, slot-specific delays, and repetition counts are stored in your platform’s user data directory (for example: `~/.local/share/MacroRecorder/recorded_keys.json` on Linux, `%APPDATA%\\MacroRecorder\\recorded_keys.json` on Windows, or `~/Library/Application Support/MacroRecorder/recorded_keys.json` on macOS). Your latest GUI adjustments are saved automatically when you stop recording or close the app, so the same values are restored the next time you launch Macro Recorder on any supported platform.
 
 ## Typical workflow
 

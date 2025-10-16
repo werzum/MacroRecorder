@@ -60,11 +60,10 @@ def play(slot_index: int = 0) -> None:
             return
 
         stored_settings = slot.get("settings", {})
-        for key, value in stored_settings.items():
-            if key in settings:
-                settings[key] = value
+        effective_settings = stored_settings.copy()
+        effective_settings.update(settings)
 
-        repetitions = int(settings["repetitions"])
+        repetitions = int(effective_settings["repetitions"])
         for _ in range(repetitions):
             for event in events:
                 key_name = event["key"]
@@ -72,9 +71,9 @@ def play(slot_index: int = 0) -> None:
                 resolved_key = _resolve_key(key_name)
 
                 default_delay = (
-                    settings["alt_tab_delay"]
+                    effective_settings["alt_tab_delay"]
                     if key_name in ("Key.tab", "Key.alt")
-                    else settings["regular_delay"]
+                    else effective_settings["regular_delay"]
                 )
                 duration = event.get("duration", default_delay)
 
